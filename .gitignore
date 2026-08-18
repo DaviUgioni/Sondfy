@@ -1,0 +1,30 @@
+# Dados sensíveis - NUNCA subir
+cookies.txt
+
+# Músicas baixadas (conteúdo do usuário, não faz parte do código)
+musicas/
+
+# Cache e arquivos do Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+
+# Ambientes virtuais
+venv/
+env/
+.venv/
+
+# Configurações de IDE
+.vscode/
+.idea/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Build artifacts (PyInstaller)
+build/
+dist/
+*.spec

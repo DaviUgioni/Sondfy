@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sondfy"
+version = "1.0.0"
+description = "Player de música local inspirado no Spotify"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Davi", email = "seu-email@exemplo.com"}
+]
+keywords = ["music", "player", "spotify", "audio", "yt-dlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Multimedia :: Sound/Audio :: Players",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "customtkinter>=5.2.0",
+    "sounddevice>=0.4.6",
+    "soundfile>=0.12.1",
+    "mutagen>=1.47.0",
+    "Pillow>=10.0.0",
+    "yt-dlp>=2024.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyinstaller>=6.0.0",
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+]
+
+[project.scripts]
+sondfy = "Sondfy:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

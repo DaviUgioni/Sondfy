@@ -1,0 +1,21 @@
+# Sondfy - Dependências
+# Python >= 3.10
+
+# Interface gráfica
+customtkinter>=5.2.0
+
+# Áudio
+sounddevice>=0.4.6
+soundfile>=0.12.1
+
+# Metadados de áudio
+mutagen>=1.47.0
+
+# Imagens
+Pillow>=10.0.0
+
+# Download do YouTube
+yt-dlp>=2024.1.0
+
+# Build (opcional, para gerar executável)
+# pyinstaller>=6.0.0
