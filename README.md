@@ -1,8 +1,8 @@
-# Sondfy 🎵
+# Sondfy 
 
 Um player de música local moderno e minimalista, inspirado no Spotify, desenvolvido em Python com interface gráfica usando CustomTkinter.
 
-## ✨ Funcionalidades
+##  Funcionalidades
 
 - **Player de áudio local** — Reproduz MP3, FLAC, WAV, OGG, M4A
 - **Download do YouTube** — Baixe músicas diretamente pelo link (usa yt-dlp)
@@ -12,11 +12,11 @@ Um player de música local moderno e minimalista, inspirado no Spotify, desenvol
 - **Metadados** — Leitura de duração, título via mutagen
 - **Executável standalone** — Gera .exe com PyInstaller (sem precisar instalar Python)
 
-## 📸 Capturas de tela
+##  Capturas de tela
 
 *(Adicione screenshots aqui se quiser)*
 
-## 🚀 Instalação
+##  Instalação
 
 ### Pré-requisitos
 
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 python Sondfy.py
 ```
 
-## 📦 Gerar executável (.exe)
+##  Gerar executável (.exe)
 
 ```bash
 # Instale o PyInstaller se não tiver
@@ -58,7 +58,7 @@ pyinstaller Sondfy.spec
 
 O executável estará em `dist/Sondfy.exe`.
 
-## ⚙️ Configuração
+##  Configuração
 
 ### Cookies do YouTube (para downloads)
 
@@ -68,7 +68,7 @@ Crie um arquivo `cookies.txt` na raiz do projeto com os cookies exportados do se
 
 Por padrão, as músicas ficam na pasta `musicas/` na raiz do projeto. Você pode alterar a constante `PASTA_MUSICAS` no código.
 
-## 🛠️ Dependências principais
+##  Dependências principais
 
 | Pacote | Função |
 |--------|--------|
@@ -79,7 +79,7 @@ Por padrão, as músicas ficam na pasta `musicas/` na raiz do projeto. Você pod
 | `Pillow` | Manipulação de imagens (capas, ícones) |
 | `yt-dlp` | Download de áudio do YouTube |
 
-## 📁 Estrutura do projeto
+##  Estrutura do projeto
 
 ```
 Sondfy/
@@ -95,7 +95,7 @@ Sondfy/
 └── README.md
 ```
 
-## 🎮 Como usar
+##  Como usar
 
 1. Abra o Sondfy
 2. Clique em **+ Adicionar Música** na sidebar
@@ -103,18 +103,18 @@ Sondfy/
 4. A música aparecerá na lista — clique para tocar
 5. Use os controles na barra inferior: play/pause, anterior/próxima, loop, volume, seek
 
-## 🤝 Contribuindo
+##  Contribuindo
 
 Contribuições são bem-vindas! Sinta-se à vontade para:
 - Reportar bugs
 - Sugerir funcionalidades
 - Enviar pull requests
 
-## 📄 Licença
+##  Licença
 
 Este projeto está licenciado sob a **GPL-3.0** — veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-## 🙏 Agradecimentos
+##  Agradecimentos
 
 - [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) — Interface moderna
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) — Download robusto do YouTube
