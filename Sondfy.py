@@ -7,6 +7,10 @@ import soundfile as sf
 from mutagen import File
 from PIL import Image, ImageDraw
 
+# Diretório base do script (funciona independente de onde é executado)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+COOKIES_FILE = os.path.join(BASE_DIR, "cookies.txt")
+
 
 # =========================
 # Configurações
@@ -548,7 +552,7 @@ class Sondfy(ctk.CTk):
         try:
             import yt_dlp
 
-            if not os.path.exists("cookies.txt"):
+            if not os.path.exists(COOKIES_FILE):
                 self.after(
                     0,
                     self.download_erro,
@@ -570,7 +574,7 @@ class Sondfy(ctk.CTk):
                 ],
 
                 "writethumbnail": True,
-                "cookiefile": "cookies.txt",
+                "cookiefile": COOKIES_FILE,
 
                 "extractor_args": {
                     "youtube": {
