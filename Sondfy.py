@@ -5,7 +5,7 @@ import customtkinter as ctk
 import sounddevice as sd
 import soundfile as sf
 from mutagen import File
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageTk
 
 # Diretório base do script (funciona independente de onde é executado)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +22,12 @@ ctk.set_default_color_theme("green")
 FUNDO = "#121212"
 SIDEBAR = "#000000"
 CARD = "#181818"
-CARD_HOVER = "#282828"
-TEXTO_SECUNDARIO = "#b3b3b3"
+CARD_HOVER = "#2a2a2a"
+TEXTO_PRIMARIO = "#ffffff"
+TEXTO_SECUNDARIO = "#a7a7a7"
+DIVISOR = "#2a2a2a"
 VERDE = "#1DB954"
+VERDE_HOVER = "#1ed760"
 
 PASTA_MUSICAS = "musicas"
 EXTENSOES = (".mp3", ".flac", ".wav", ".ogg", ".m4a")
@@ -154,8 +157,66 @@ def icone_volume(cor):
     return imagem.resize((24, 24), Image.LANCZOS)
 
 
+def icone_nota(cor):
+    imagem, desenho = criar_icone()
+
+    desenho.rectangle(
+        [58, 14, 66, 64],
+        fill=cor
+    )
+
+    desenho.polygon(
+        [(66, 14), (88, 24), (88, 40), (66, 32)],
+        fill=cor
+    )
+
+    desenho.ellipse(
+        [26, 56, 58, 84],
+        fill=cor
+    )
+
+    return imagem.resize((24, 24), Image.LANCZOS)
+
+
+def icone_logo(cor_fundo, cor_onda):
+    imagem, desenho = criar_icone()
+
+    desenho.ellipse(
+        [4, 4, 92, 92],
+        fill=cor_fundo
+    )
+
+    centro_x, centro_y = 32, 64
+
+    for raio in (14, 26, 38):
+        desenho.arc(
+            [
+                centro_x - raio,
+                centro_y - raio,
+                centro_x + raio,
+                centro_y + raio
+            ],
+            start=-55,
+            end=15,
+            fill=cor_onda,
+            width=7
+        )
+
+    return imagem.resize((32, 32), Image.LANCZOS)
+
+
 def imagem_icone(funcao, cor, tamanho=(20, 20)):
     imagem = funcao(cor)
+
+    return ctk.CTkImage(
+        light_image=imagem,
+        dark_image=imagem,
+        size=tamanho
+    )
+
+
+def imagem_logo(tamanho=(28, 28)):
+    imagem = icone_logo(VERDE, "black")
 
     return ctk.CTkImage(
         light_image=imagem,
@@ -398,6 +459,23 @@ class Sondfy(ctk.CTk):
             progresso=self.atualizar_progresso
         )
 
+        self.imagem_logo = imagem_logo()
+
+        self.icone_nota_capa = imagem_icone(
+            icone_nota,
+            TEXTO_SECUNDARIO,
+            (20, 20)
+        )
+
+        self.icone_nota_player = imagem_icone(
+            icone_nota,
+            TEXTO_SECUNDARIO,
+            (22, 22)
+        )
+
+        self._icone_janela = ImageTk.PhotoImage(icone_logo(VERDE, "black"))
+        self.iconphoto(True, self._icone_janela)
+
         self.criar_sidebar()
         self.criar_conteudo()
         self.criar_player()
@@ -419,23 +497,39 @@ class Sondfy(ctk.CTk):
         sidebar.grid(row=0, column=0, sticky="nsw")
         sidebar.grid_propagate(False)
 
-        titulo = ctk.CTkLabel(
+        cabecalho = ctk.CTkFrame(
             sidebar,
-            text="🎵 Sondfy",
-            font=ctk.CTkFont(size=22, weight="bold")
+            fg_color="transparent"
         )
 
-        titulo.pack(
+        cabecalho.pack(
             anchor="w",
             padx=20,
             pady=(24, 30)
         )
 
+        logo = ctk.CTkLabel(
+            cabecalho,
+            text="",
+            image=self.imagem_logo
+        )
+
+        logo.pack(side="left", padx=(0, 8))
+
+        titulo = ctk.CTkLabel(
+            cabecalho,
+            text="Sondfy",
+            text_color=TEXTO_PRIMARIO,
+            font=ctk.CTkFont(size=22, weight="bold")
+        )
+
+        titulo.pack(side="left")
+
         adicionar = ctk.CTkButton(
             sidebar,
             text="+  Adicionar Música",
             fg_color=VERDE,
-            hover_color="#1ed760",
+            hover_color=VERDE_HOVER,
             text_color="black",
             height=36,
             corner_radius=20,
@@ -501,8 +595,11 @@ class Sondfy(ctk.CTk):
         todas = ctk.CTkButton(
             sidebar,
             text="🎧  Todas as Músicas",
+            text_color=TEXTO_PRIMARIO,
+            font=ctk.CTkFont(size=13, weight="bold"),
             fg_color="transparent",
             hover_color=CARD_HOVER,
+            corner_radius=6,
             anchor="w",
             command=lambda: None
         )
@@ -662,7 +759,8 @@ class Sondfy(ctk.CTk):
         titulo = ctk.CTkLabel(
             container,
             text="Todas as Músicas",
-            font=ctk.CTkFont(size=26, weight="bold")
+            text_color=TEXTO_PRIMARIO,
+            font=ctk.CTkFont(size=32, weight="bold")
         )
 
         titulo.grid(
@@ -670,12 +768,15 @@ class Sondfy(ctk.CTk):
             column=0,
             sticky="w",
             padx=30,
-            pady=(24, 16)
+            pady=(28, 20)
         )
 
         self.lista = ctk.CTkScrollableFrame(
             container,
-            fg_color="transparent"
+            fg_color="transparent",
+            scrollbar_fg_color="transparent",
+            scrollbar_button_color=CARD_HOVER,
+            scrollbar_button_hover_color="#444444"
         )
 
         self.lista.grid(
@@ -713,15 +814,15 @@ class Sondfy(ctk.CTk):
     def criar_card(self, musica, indice):
         card = ctk.CTkFrame(
             self.lista,
-            fg_color=CARD,
-            corner_radius=8,
+            fg_color="transparent",
+            corner_radius=4,
             height=64
         )
 
         card.pack(
             fill="x",
-            pady=4,
-            padx=4
+            pady=0,
+            padx=0
         )
 
         card.pack_propagate(False)
@@ -734,19 +835,19 @@ class Sondfy(ctk.CTk):
 
         capa = ctk.CTkLabel(
             card,
-            text="" if capa_imagem else "🎵",
-            image=capa_imagem,
+            text="" if capa_imagem else "",
+            image=capa_imagem if capa_imagem else self.icone_nota_capa,
             width=44,
             height=44,
-            fg_color=CARD_HOVER,
-            corner_radius=6,
+            fg_color=CARD,
+            corner_radius=4,
             font=ctk.CTkFont(size=18)
         )
 
         capa.grid(
             row=0,
             column=0,
-            padx=(12, 12),
+            padx=(16, 12),
             pady=10
         )
 
@@ -765,6 +866,7 @@ class Sondfy(ctk.CTk):
         titulo = ctk.CTkLabel(
             informacoes,
             text=musica["titulo"],
+            text_color=TEXTO_PRIMARIO,
             font=ctk.CTkFont(size=14, weight="bold")
         )
 
@@ -797,14 +899,26 @@ class Sondfy(ctk.CTk):
             capa,
             informacoes,
             titulo,
-            artista
+            artista,
+            duracao
         )
+
+        def destacar(_event=None):
+            card.configure(fg_color=CARD_HOVER)
+            capa.configure(fg_color=CARD_HOVER)
+
+        def remover_destaque(_event=None):
+            card.configure(fg_color="transparent")
+            capa.configure(fg_color=CARD)
 
         for widget in widgets:
             widget.bind(
                 "<Button-1>",
                 lambda event, i=indice: self.tocar(i)
             )
+
+            widget.bind("<Enter>", destacar)
+            widget.bind("<Leave>", remover_destaque)
 
     def recarregar_musicas(self):
         self.musicas = carregar_musicas()
@@ -853,8 +967,8 @@ class Sondfy(ctk.CTk):
             )
         else:
             self.capa_atual.configure(
-                image=None,
-                text="🎵"
+                image=self.icone_nota_player,
+                text=""
             )
 
     def musica_terminou(self):
@@ -884,7 +998,9 @@ class Sondfy(ctk.CTk):
             self,
             height=90,
             fg_color=SIDEBAR,
-            corner_radius=0
+            corner_radius=0,
+            border_width=1,
+            border_color=DIVISOR
         )
 
         barra.grid(
@@ -916,7 +1032,8 @@ class Sondfy(ctk.CTk):
 
         self.capa_atual = ctk.CTkLabel(
             esquerda,
-            text="🎵",
+            text="",
+            image=self.icone_nota_player,
             width=48,
             height=48,
             fg_color=CARD_HOVER,
@@ -939,6 +1056,7 @@ class Sondfy(ctk.CTk):
         self.nome_musica = ctk.CTkLabel(
             info,
             text="Nenhuma música tocando",
+            text_color=TEXTO_PRIMARIO,
             font=ctk.CTkFont(
                 size=13,
                 weight="bold"
@@ -1117,7 +1235,9 @@ class Sondfy(ctk.CTk):
             progresso,
             from_=0,
             to=1000,
-            height=8,
+            height=4,
+            button_length=12,
+            fg_color=DIVISOR,
             progress_color=VERDE,
             button_color="white",
             button_hover_color="white",
@@ -1186,7 +1306,9 @@ class Sondfy(ctk.CTk):
             from_=0,
             to=100,
             width=100,
-            height=8,
+            height=4,
+            button_length=12,
+            fg_color=DIVISOR,
             progress_color=VERDE,
             button_color="white",
             button_hover_color="white",
